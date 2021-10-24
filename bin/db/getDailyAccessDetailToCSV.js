@@ -2,13 +2,11 @@ const db = require('./db_config');
 const ObjectsToCsv = require('objects-to-csv');
 
 async function createCSV(dataArray) {
-  // const folderName = options.folder + "csv";
-  const folderName = './data/' + "csv";
   const fileName = 'Daily Access Detail Log'
   const csv = new ObjectsToCsv(dataArray);
  
   // Save to file:
-  await csv.toDisk(`${folderName}/${fileName}.csv`);
+  await csv.toDisk(`result/data-processing/${fileName}.csv`);
   console.log(`berhasil membuat file csv`)
 }
 
@@ -18,7 +16,7 @@ function getDailyAccessDetailToCSV(dateFrom, dateTo) {
   db.serialize(function(){
 
       let sql = `SELECT tanggal, ip, method, aux_method, status, url, browser, os, COUNT(*) AS jumlah FROM logs
-        WHERE tanggal  
+        WHERE tanggal BETWEEN '${dateFrom}' AND '${dateTo}'
         GROUP BY tanggal, ip, method, aux_method, status, url, browser, os
       `;
       db.all(sql, async (err, rows) => {
@@ -51,7 +49,5 @@ function getDailyAccessDetailToCSV(dateFrom, dateTo) {
 
   db.close();
 }
-
-getDailyAccessDetailToCSV()
 
 module.exports = getDailyAccessDetailToCSV;

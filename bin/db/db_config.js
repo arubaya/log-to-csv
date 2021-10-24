@@ -5,6 +5,7 @@ const dbFile = './result/db/log_database.db';
 
 createFolder(`./result`);
 createFolder(`./result/db`);
+createFolder(`./result/data-processing`);
 
 let db = new sqlite3.Database(dbFile, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
     if(err) throw err;

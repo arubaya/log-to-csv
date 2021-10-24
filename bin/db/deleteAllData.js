@@ -1,6 +1,6 @@
 const db = require("./db_config");
 
-function deleteAllData(dataObject, index) {
+function deleteAllData() {
   db.serialize(function () {
     let sql = `DELETE FROM logs`;
 
