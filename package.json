@@ -1,6 +1,6 @@
 {
   "name": "log-csv",
-  "version": "1.0.0",
+  "version": "1.3.0",
   "description": "UIN Suka Log file to CSV Custom",
   "main": "bin/index.js",
   "bin": {

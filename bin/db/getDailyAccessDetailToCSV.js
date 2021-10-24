@@ -1,12 +1,12 @@
 const db = require('./db_config');
 const ObjectsToCsv = require('objects-to-csv');
 
-async function createCSV(dataArray) {
-  const fileName = 'Daily Access Detail Log'
+async function createCSV(dataArray, dateFrom, dateTo) {
+  const fileName = 'DAILY_ACCESS_DETAIL_LOG'
   const csv = new ObjectsToCsv(dataArray);
  
   // Save to file:
-  await csv.toDisk(`result/data-processing/${fileName}.csv`);
+  await csv.toDisk(`result/data-processing/${fileName}_${dateFrom} - ${dateTo}.csv`);
   console.log(`berhasil membuat file csv`)
 }
 
@@ -25,7 +25,6 @@ function getDailyAccessDetailToCSV(dateFrom, dateTo) {
           if(rows){
               // cetak isi rows
               await rows.forEach(data => {
-                  // console.log(`${data.tanggal} | ${data.jumlah}`);
                   rowData = {
                     tanggal: data.tanggal,
                     ip: data.ip,
@@ -39,7 +38,7 @@ function getDailyAccessDetailToCSV(dateFrom, dateTo) {
                   }
                   datas.push(rowData)
               });
-              createCSV(datas);
+              createCSV(datas, dateFrom, dateTo);
           } else {
               console.log("tidak ada data/hasil");
           }

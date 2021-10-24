@@ -5,9 +5,9 @@ const insertLogToDatabase = require("./utils/insertLogToDatabase");
 
 const createTable = require("./db/createTable");
 const deleteAllData = require("./db/deleteAllData");
+const getDataByDate = require("./db/getDataByDate");
 const getDailyAccessToCSV = require("./db/getDailyAccessToCSV");
 const getDailyAccessDetailToCSV = require("./db/getDailyAccessDetailToCSV");
-// const getAllData = require('./db/getAllData');
 
 // CLI arguments with yargs package
 const argv = yargs
@@ -41,6 +41,20 @@ const argv = yargs
     },
   })
   .command("delete", "Delete data in log table")
+  .command("get-data", "Export data by date range to csv", {
+    dateFrom: {
+      alias: "d",
+      describe: "Start date filter",
+      demandOption: true,
+      type: "string",
+    },
+    dateTo: {
+      alias: "D",
+      describe: "End date filter",
+      demandOption: true,
+      type: "string",
+    },
+  })
   .command("get-daily", "Export daily access data processing to csv ", {
     dateFrom: {
       alias: "d",
@@ -55,20 +69,24 @@ const argv = yargs
       type: "string",
     },
   })
-  .command("get-daily-detail", "Export detail daily access data processing to csv ", {
-    dateFrom: {
-      alias: "d",
-      describe: "Start date filter",
-      demandOption: true,
-      type: "string",
-    },
-    dateTo: {
-      alias: "D",
-      describe: "End date filter",
-      demandOption: true,
-      type: "string",
-    },
-  })
+  .command(
+    "get-daily-detail",
+    "Export detail daily access data processing to csv ",
+    {
+      dateFrom: {
+        alias: "d",
+        describe: "Start date filter",
+        demandOption: true,
+        type: "string",
+      },
+      dateTo: {
+        alias: "D",
+        describe: "End date filter",
+        demandOption: true,
+        type: "string",
+      },
+    }
+  )
   .command("create-csv", "Convert all log file in folder to CSV", {
     folder: {
       alias: "F",
@@ -95,6 +113,7 @@ const argv = yargs
   .example([
     ["create-csv", '-F "./data/" -f "autosurat.access.log" -c "52"'],
     ["insert", '-F "./data/" -f "autosurat.access.log" -c "52"'],
+    ["get-data", '--dateFrom "06-10-2021" --dateTo "10-10-2021"'],
     ["get-daily", '--dateFrom "06-10-2021" --dateTo "10-10-2021"'],
     ["get-daily-detail", '--dateFrom "06-10-2021" --dateTo "10-10-2021"'],
   ]).argv;
@@ -113,6 +132,10 @@ async function main() {
 
     case "delete":
       deleteAllData();
+      break;
+
+    case "get-data":
+      getDataByDate(argv.dateFrom, argv.dateTo);
       break;
 
     case "get-daily":
