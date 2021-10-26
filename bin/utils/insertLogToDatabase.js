@@ -53,7 +53,7 @@ async function insertLogToDatabase(file, folderName, numberOfFile) {
       await sleep(1000);
       let totalSeconds = 0;
       let seconds, minutes;
-      setInterval(() => {
+      let interval = setInterval(() => {
         ++totalSeconds;
         seconds = pad(totalSeconds % 60);
         minutes = pad(parseInt(totalSeconds / 60));
@@ -61,6 +61,7 @@ async function insertLogToDatabase(file, folderName, numberOfFile) {
       for (let i = 0; i < lineDatas.length; i++) {
         insertData(lineDatas[i], i + 1);
       }
+      clearInterval(interval);
       console.log();
       console.log('Done!')
       console.log(`${minutes} minutes ${seconds} seconds`)
