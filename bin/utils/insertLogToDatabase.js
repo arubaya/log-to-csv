@@ -27,6 +27,15 @@ async function parsingLogToCSV(file, folderName, numberOfFile) {
   }
 }
 
+function pad(val) {
+  var valString = val + "";
+  if (valString.length < 2) {
+    return "0" + valString;
+  } else {
+    return valString;
+  }
+}
+
 async function insertLogToDatabase(file, folderName, numberOfFile) {
   console.log(
     "If there is duplicate data in the table, it will be added\ny = insert\nn = delete data\n"
@@ -42,9 +51,19 @@ async function insertLogToDatabase(file, folderName, numberOfFile) {
     if (insertAnswer === "y") {
       console.log(`Inserting Data..`);
       await sleep(1000);
+      let totalSeconds = 0;
+      let seconds, minutes;
+      setInterval(() => {
+        ++totalSeconds;
+        seconds = pad(totalSeconds % 60);
+        minutes = pad(parseInt(totalSeconds / 60));
+      }, 1000);
       for (let i = 0; i < lineDatas.length; i++) {
         insertData(lineDatas[i], i + 1);
       }
+      console.log();
+      console.log('Done!')
+      console.log(`${minutes} minutes ${seconds} seconds`)
     } else {
       console.log("Aborting insert data..");
       return;
