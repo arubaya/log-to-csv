@@ -59,11 +59,12 @@ async function insertLogToDatabase(file, folderName, numberOfFile) {
         minutes = pad(parseInt(totalSeconds / 60));
       }, 1000);
       for (let i = 0; i < lineDatas.length; i++) {
-        insertData(lineDatas[i], i + 1);
+        await insertData(lineDatas[i], i + 1);
       }
       clearInterval(interval);
       console.log();
       console.log('Done!')
+      console.log("Total lines data: " + lineDatas.length + ' have been successfully inserted');
       console.log(`${minutes} minutes ${seconds} seconds`)
     } else {
       console.log("Aborting insert data..");
