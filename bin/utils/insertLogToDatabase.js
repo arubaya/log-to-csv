@@ -5,22 +5,20 @@ const deleteAllData = require("../db/deleteAllData");
 const sleep = require("./sleep");
 const prompt = ps();
 
-const lineDatas = [];
+let datas;
+let lines = 0;
+let linesCount = 1;
 
 async function parsingLogToCSV(file, folderName, numberOfFile) {
   for (let index = 1; index <= parseInt(numberOfFile); index++) {
     const fileName = file + "." + index;
     console.log("File: " + fileName);
-    let datas = await readFile(folderName + fileName).then((datas) => datas);
+    datas = await readFile(folderName + fileName).then((datas) => datas);
     console.log("Finish parsing. Total chunks: " + datas.length);
-    let lines = 0;
     datas.forEach((data) => {
       lines = lines + data.length;
     });
     console.log("Total lines in file: " + lines);
-    for (let i = 0; i < lines; i++) {
-      lineDatas.push(datas[0][i]);
-    }
     await sleep(1000);
     console.log("Done!");
     console.log();
@@ -45,7 +43,7 @@ async function insertLogToDatabase(file, folderName, numberOfFile) {
   if (answer === "y") {
     await parsingLogToCSV(file, folderName, numberOfFile);
 
-    console.log("Total lines data: " + lineDatas.length);
+    console.log("Total lines data: " + lines);
     const insertAnswer = prompt("Are you sure you want to insert data?(y/n): ");
 
     if (insertAnswer === "y") {
@@ -58,8 +56,11 @@ async function insertLogToDatabase(file, folderName, numberOfFile) {
         seconds = pad(totalSeconds % 60);
         minutes = pad(parseInt(totalSeconds / 60));
       }, 1000);
-      for (let i = 0; i < lineDatas.length; i++) {
-        await insertData(lineDatas[i], i + 1);
+      for (let i = 0; i < datas.length; i++) {
+        for (let j = 0; j < datas[i].length; j++) {
+          await insertData(datas[i][j], linesCount);
+          linesCount++;
+        }
       }
       clearInterval(interval);
       console.log();

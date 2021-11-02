@@ -12,8 +12,8 @@ function insertData(dataObject, index) {
       const placeholders = Object.keys(dataObject).fill("?").join(", ");
 
       let sql = `INSERT INTO logs (${cols}) 
-    VALUES (${placeholders})
-    `;
+      VALUES (${placeholders})
+      `;
       db.run(sql, Object.values(dataObject), (err) => {
         if (err) throw reject(err);
         resolve(console.log(`${index} record inserted`));
