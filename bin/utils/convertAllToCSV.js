@@ -16,7 +16,7 @@ async function convertAllToCSV(file, folderName, numberOfFile) {
       })
       console.log('Total lines: ' + lines)
       for (let i = 0; i < datas.length; i++) {
-        createCSV(index, datas[i], folderName, file);
+        createCSV(index, datas[i], folderName, file, i+1);
       }
       console.log()
   }

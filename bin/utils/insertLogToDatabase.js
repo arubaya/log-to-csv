@@ -5,21 +5,23 @@ const deleteAllData = require("../db/deleteAllData");
 const sleep = require("./sleep");
 const prompt = ps();
 
-const lineDatas = [];
+let lineDatas = [];
+let lines = 0;
 
 async function parsingLogToCSV(file, folderName, numberOfFile) {
   for (let index = 1; index <= parseInt(numberOfFile); index++) {
     const fileName = file + "." + index;
     console.log("File: " + fileName);
-    let datas = await readFile(folderName + fileName).then((datas) => datas);
+    datas = await readFile(folderName + fileName).then((datas) => datas);
     console.log("Finish parsing. Total chunks: " + datas.length);
-    let lines = 0;
     datas.forEach((data) => {
       lines = lines + data.length;
     });
     console.log("Total lines in file: " + lines);
-    for (let i = 0; i < lines; i++) {
-      lineDatas.push(datas[0][i]);
+    for (let i = 0; i < datas.length; i++) {
+      for (let j = 0; j < datas[i].length; j++) {
+        lineDatas.push(datas[i][j]);
+      }
     }
     await sleep(1000);
     console.log("Done!");
@@ -45,7 +47,7 @@ async function insertLogToDatabase(file, folderName, numberOfFile) {
   if (answer === "y") {
     await parsingLogToCSV(file, folderName, numberOfFile);
 
-    console.log("Total lines data: " + lineDatas.length);
+    console.log("Total lines data: " + lines);
     const insertAnswer = prompt("Are you sure you want to insert data?(y/n): ");
 
     if (insertAnswer === "y") {

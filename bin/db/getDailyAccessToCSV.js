@@ -6,7 +6,7 @@ async function createCSV(dataArray, dateFrom, dateTo) {
   const csv = new ObjectsToCsv(dataArray);
  
   // Save to file:
-  await csv.toDisk(`result/data-processing/${fileName}_${dateFrom} - ${dateTo}.csv`);
+  await csv.toDisk(`result/data-processing/${fileName}(${dateFrom} - ${dateTo}).csv`);
   console.log(`berhasil membuat file csv`)
 }
 
