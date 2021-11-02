@@ -2,7 +2,6 @@ const fs = require("fs");
 const es = require("event-stream");
 const useragent = require("useragent");
 const moment = require("moment");
-const insertData = require("../db/insertData");
 
 // Readfile function
 // Match and split log file line by line
@@ -42,7 +41,6 @@ function readFile(path) {
                   browser: agent.toAgent(),
                   os: agent.os.toString(),
                 };
-                insertData(data, index+1)
 
                 index++;
                 if (index % 100000 == 0) {

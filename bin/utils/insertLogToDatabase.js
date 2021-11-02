@@ -46,32 +46,32 @@ async function insertLogToDatabase(file, folderName, numberOfFile) {
     await parsingLogToCSV(file, folderName, numberOfFile);
 
     console.log("Total lines data: " + lineDatas.length);
-  //   const insertAnswer = prompt("Are you sure you want to insert data?(y/n): ");
+    const insertAnswer = prompt("Are you sure you want to insert data?(y/n): ");
 
-  //   if (insertAnswer === "y") {
-  //     console.log(`Inserting Data..`);
-  //     await sleep(1000);
-  //     let totalSeconds = 0;
-  //     let seconds, minutes;
-  //     let interval = setInterval(() => {
-  //       ++totalSeconds;
-  //       seconds = pad(totalSeconds % 60);
-  //       minutes = pad(parseInt(totalSeconds / 60));
-  //     }, 1000);
-  //     for (let i = 0; i < lineDatas.length; i++) {
-  //       await insertData(lineDatas[i], i + 1);
-  //     }
-  //     clearInterval(interval);
-  //     console.log();
-  //     console.log('Done!')
-  //     console.log("Total lines data: " + lineDatas.length + ' have been successfully inserted');
-  //     console.log(`${minutes} minutes ${seconds} seconds`)
-  //   } else {
-  //     console.log("Aborting insert data..");
-  //     return;
-  //   }
-  // } else {
-  //   deleteAllData();
+    if (insertAnswer === "y") {
+      console.log(`Inserting Data..`);
+      await sleep(1000);
+      let totalSeconds = 0;
+      let seconds, minutes;
+      let interval = setInterval(() => {
+        ++totalSeconds;
+        seconds = pad(totalSeconds % 60);
+        minutes = pad(parseInt(totalSeconds / 60));
+      }, 1000);
+      for (let i = 0; i < lineDatas.length; i++) {
+        await insertData(lineDatas[i], i + 1);
+      }
+      clearInterval(interval);
+      console.log();
+      console.log('Done!')
+      console.log("Total lines data: " + lineDatas.length + ' have been successfully inserted');
+      console.log(`${minutes} minutes ${seconds} seconds`)
+    } else {
+      console.log("Aborting insert data..");
+      return;
+    }
+  } else {
+    deleteAllData();
   }
 }
 
