@@ -7,21 +7,35 @@
     "log-csv": "./bin/index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "sequelize db:migrate",
+    "model": "sequelize model:generate --name LogData --attributes ip:text,tanggal:dateonly,waktu:text,method:text,aux_method:text,status:text,url:text,browser:text,os:text",
+    "rollback": "sequelize db:migrate:undo",
+    "rollback:all": "sequelize db:migrate:undo:all",
+    "seed": "sequelize db:seed:all"
   },
-  "keywords": ["cli", "log", "csv"],
+  "keywords": [
+    "cli",
+    "log",
+    "csv"
+  ],
   "author": "Tsabit Arubaya",
   "license": "ISC",
   "dependencies": {
     "event-stream": "^4.0.1",
     "fs": "0.0.1-security",
     "moment": "^2.29.1",
+    "mysql2": "^2.3.3",
     "objects-to-csv": "^1.3.6",
     "prompt-sync": "^4.2.0",
     "readline": "^1.3.0",
+    "sequelize": "^6.9.0",
     "sqlite3": "^5.0.2",
     "user-agent": "^1.0.4",
     "useragent": "^2.3.0",
     "yargs": "^17.2.1"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.3.0"
   }
 }

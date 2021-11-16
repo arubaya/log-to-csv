@@ -5,10 +5,10 @@ const sleep = require('./sleep');
 
 async function convertAllToCSV(file, folderName, numberOfFile) {
   createFolder(`./result/csv`);
-  for (let index = 1; index <= parseInt(numberOfFile); index++) {
+  for (let index = 0; index < parseInt(numberOfFile); index++) {
       const fileName = file + "." + index;
       console.log('File: ' + fileName);
-      let datas = await readFile(folderName + fileName).then(datas =>datas);
+      let datas = await readFile(folderName + fileName).then(datas => datas);
       console.log('Finish parsing. Total chunks: ' + datas.length);
       let lines = 0;
       datas.forEach(data => {

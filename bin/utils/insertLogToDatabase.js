@@ -5,6 +5,8 @@ const deleteAllData = require("../db/deleteAllData");
 const sleep = require("./sleep");
 const prompt = ps();
 
+const logDataController = require('../controller/logData');
+
 let lineDatas = [];
 let lines = 0;
 
@@ -61,7 +63,8 @@ async function insertLogToDatabase(file, folderName, numberOfFile) {
         minutes = pad(parseInt(totalSeconds / 60));
       }, 1000);
       for (let i = 0; i < lineDatas.length; i++) {
-        await insertData(lineDatas[i], i + 1);
+        // await insertData(lineDatas[i], i + 1);
+        await logDataController.storeData(lineDatas[i], i + 1);
       }
       clearInterval(interval);
       console.log();
