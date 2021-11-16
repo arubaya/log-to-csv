@@ -2,19 +2,20 @@ const fs = require("fs");
 const es = require("event-stream");
 const useragent = require("useragent");
 const moment = require("moment");
+const accessLogController = require('../controller/accessLog');
 
 // Readfile function
 // Match and split log file line by line
-function readFile(path) {
+function readFile(path, indexFile) {
   return new Promise((resolve, reject) => {
-    let datas = [[]];
+    let datas = [];
     let index = 0;
     let readStream = fs
       .createReadStream(path)
       .pipe(es.split())
       .pipe(
         es
-          .mapSync((line) => {
+          .mapSync(async (line) => {
             readStream.pause();
             if (line !== "") {
               let data;
@@ -43,10 +44,8 @@ function readFile(path) {
                 };
 
                 index++;
-                if (index % 100000 == 0) {
-                  datas.push([]);
-                }
-                datas[datas.length - 1].push(data);
+                await accessLogController.storeData(data, index, indexFile);
+                
               }
             }
 
@@ -57,8 +56,8 @@ function readFile(path) {
             reject(err);
           })
           .on("end", () => {
-            console.log("Read file finished.");
-            resolve(datas);
+            console.log("Insert file finished.");
+            resolve(index);
           })
       );
   });

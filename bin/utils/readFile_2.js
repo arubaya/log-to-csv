@@ -2,13 +2,15 @@ const fs = require("fs");
 const es = require("event-stream");
 const useragent = require("useragent");
 const moment = require("moment");
+const createCSV = require('./createCSV_2');
 
 // Readfile function
 // Match and split log file line by line
-function readFile(path) {
+function readFile(path, fileName, indexFile) {
   return new Promise((resolve, reject) => {
-    let datas = [[]];
+    let datas = [];
     let index = 0;
+    let chunk = 1;
     let readStream = fs
       .createReadStream(path)
       .pipe(es.split())
@@ -44,9 +46,11 @@ function readFile(path) {
 
                 index++;
                 if (index % 100000 == 0) {
-                  datas.push([]);
+                  createCSV(indexFile, datas, fileName, chunk);
+                  chunk++;
+                  datas = [];
                 }
-                datas[datas.length - 1].push(data);
+                datas.push(data);
               }
             }
 
@@ -57,7 +61,7 @@ function readFile(path) {
             reject(err);
           })
           .on("end", () => {
-            console.log("Read file finished.");
+            console.log("Convert file finished.");
             resolve(datas);
           })
       );

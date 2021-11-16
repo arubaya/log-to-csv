@@ -1,27 +1,23 @@
 const ps = require("prompt-sync");
-const readFile = require("./readFile");
-const insertData = require("../db/insertData");
-const deleteAllData = require("../db/deleteAllData");
+const readFileError = require("./readFileError");
 const sleep = require("./sleep");
 const prompt = ps();
+
+const errorLogController = require('../controller/errorLog');
 
 let lineDatas = [];
 let lines = 0;
 
 async function parsingLogToCSV(file, folderName, numberOfFile) {
-  for (let index = 1; index <= parseInt(numberOfFile); index++) {
+  for (let index = 0; index < parseInt(numberOfFile); index++) {
     const fileName = file + "." + index;
     console.log("File: " + fileName);
-    datas = await readFile(folderName + fileName).then((datas) => datas);
-    console.log("Finish parsing. Total chunks: " + datas.length);
-    datas.forEach((data) => {
-      lines = lines + data.length;
-    });
-    console.log("Total lines in file: " + lines);
+    datas = await readFileError(folderName + fileName).then((datas) => datas);
+    console.log("Total lines in file: " + datas.length);
+    lines = lines + datas.length;
+    console.log("Total lines data: " + lines);
     for (let i = 0; i < datas.length; i++) {
-      for (let j = 0; j < datas[i].length; j++) {
-        lineDatas.push(datas[i][j]);
-      }
+      lineDatas.push(datas[i]);
     }
     await sleep(1000);
     console.log("Done!");
@@ -38,9 +34,9 @@ function pad(val) {
   }
 }
 
-async function insertLogToDatabase(file, folderName, numberOfFile) {
+async function insertAccessLogToDatabase(file, folderName, numberOfFile) {
   console.log(
-    "If there is duplicate data in the table, it will be added\ny = insert\nn = delete data\n"
+    "If there is duplicate data in the table, it will be added\ny = insert\nn = cancel\n"
   );
   const answer = prompt("Are you sure you want to add data?(y/n): ");
 
@@ -61,7 +57,7 @@ async function insertLogToDatabase(file, folderName, numberOfFile) {
         minutes = pad(parseInt(totalSeconds / 60));
       }, 1000);
       for (let i = 0; i < lineDatas.length; i++) {
-        await insertData(lineDatas[i], i + 1);
+        await errorLogController.storeData(lineDatas[i], i + 1);
       }
       clearInterval(interval);
       console.log();
@@ -73,8 +69,9 @@ async function insertLogToDatabase(file, folderName, numberOfFile) {
       return;
     }
   } else {
-    deleteAllData();
+    console.log("Cancel insert data..");
+    return;
   }
 }
 
-module.exports = insertLogToDatabase;
+module.exports = insertAccessLogToDatabase;
