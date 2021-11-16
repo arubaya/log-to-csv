@@ -27,6 +27,13 @@ const argv = yargs
   // .command("db", "Create database and create log table")
   // .command("get-all", "Get all data from database")
   .command("insert-access", "Insert access log file data to database", {
+    type: {
+      alias: "t",
+      describe: "Tipe ukuran file log",
+      demandOption: true,
+      type: "string",
+      default: "small",
+    },
     folder: {
       alias: "F",
       describe: "Folder path of all log file",
@@ -170,7 +177,7 @@ const argv = yargs
     ["access-csv", '-t "big" --folder "./data/" --file "autosurat.access.log" -c "15"'],
     ["access-csv", '--folder "./data/" --file "autosurat.access.log" -c "15"'],
     ["error-csv", '--folder "./data/" --file "autosurat.error.log" -c "15"'],
-    ["insert", '--folder "./data/" --file "autosurat.access.log" -c "15"'],
+    ["insert-access", '--folder "./data/" --file "autosurat.access.log" -c "15"'],
     // ["get-data", '--dateFrom "06-10-2021" --dateTo "10-10-2021"'],
     // ["get-daily", '--dateFrom "06-10-2021" --dateTo "10-10-2021"'],
     // ["get-daily-detail", '--dateFrom "06-10-2021" --dateTo "10-10-2021"'],
@@ -185,7 +192,11 @@ async function main() {
     //   break;
 
     case "insert-access":
-      insertAccessLogToDatabase(argv.file, argv.folder, argv.count);
+      if (argv.type === 'small') {
+        insertAccessLogToDatabase(argv.file, argv.folder, argv.count);
+      } else {
+        insertBigAccessLogToDatabase(argv.file, argv.folder, argv.count);
+      }
       break;
   
     case "insert-error":
