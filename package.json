@@ -9,7 +9,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "sequelize db:migrate",
-    "model": "sequelize model:generate --name LogData --attributes ip:text,tanggal:dateonly,waktu:text,method:text,aux_method:text,status:text,url:text,browser:text,os:text",
+    "access-model": "sequelize model:generate --name AccessLog --attributes ip:text,tanggal:dateonly,waktu:text,method:text,aux_method:text,status:text,url:text,browser:text,os:text",
+    "error-model": "sequelize model:generate --name ErrorLog --attributes tanggal:dateonly,error_type:text,pid_title:text,pid:text,ip_title:text,ip_client:text,message:text",
     "rollback": "sequelize db:migrate:undo",
     "rollback:all": "sequelize db:migrate:undo:all",
     "seed": "sequelize db:seed:all"

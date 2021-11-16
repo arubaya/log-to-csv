@@ -2,7 +2,10 @@
 const yargs = require("yargs");
 const convertAllToCSV = require("./utils/convertAllToCSV");
 const convertAllToCSV2 = require("./utils/convertAllToCSV_2");
-// const insertLogToDatabase = require("./utils/insertLogToDatabase");
+const convertAllErrorToCSV = require("./utils/convertAllErrorToCSV");
+const insertAccessLogToDatabase = require("./utils/insertAccessLogToDatabase");
+const insertBigAccessLogToDatabase = require("./utils/insertBigAccessLogToDatabase");
+const insertErrorLogToDatabase = require("./utils/insertErrorLogToDatabase");
 
 // const createTable = require("./db/createTable");
 // const deleteAllData = require("./db/deleteAllData");
@@ -23,27 +26,48 @@ const argv = yargs
   )
   // .command("db", "Create database and create log table")
   // .command("get-all", "Get all data from database")
-  // .command("insert", "Insert log file data to database", {
-  //   folder: {
-  //     alias: "F",
-  //     describe: "Folder path of all log file",
-  //     demandOption: true,
-  //     type: "string",
-  //     default: "./data/",
-  //   },
-  //   file: {
-  //     alias: "f",
-  //     describe: "Log file name",
-  //     demandOption: true,
-  //     type: "string",
-  //   },
-  //   count: {
-  //     alias: "c",
-  //     describe: "Number of files in folder",
-  //     demandOption: true,
-  //     type: "string",
-  //   },
-  // })
+  .command("insert-access", "Insert access log file data to database", {
+    folder: {
+      alias: "F",
+      describe: "Folder path of all log file",
+      demandOption: true,
+      type: "string",
+      default: "./data/",
+    },
+    file: {
+      alias: "f",
+      describe: "Log file name",
+      demandOption: true,
+      type: "string",
+    },
+    count: {
+      alias: "c",
+      describe: "Number of files in folder",
+      demandOption: true,
+      type: "string",
+    },
+  })
+  .command("insert-error", "Insert error log file data to database", {
+    folder: {
+      alias: "F",
+      describe: "Folder path of all log file",
+      demandOption: true,
+      type: "string",
+      default: "./data/",
+    },
+    file: {
+      alias: "f",
+      describe: "Log file name",
+      demandOption: true,
+      type: "string",
+    },
+    count: {
+      alias: "c",
+      describe: "Number of files in folder",
+      demandOption: true,
+      type: "string",
+    },
+  })
   // .command("delete", "Delete data in log table")
   // .command("get-data", "Export data by date range to csv", {
   //   dateFrom: {
@@ -91,7 +115,7 @@ const argv = yargs
   //     },
   //   }
   // )
-  .command("create-csv", "Convert all log file in folder to CSV", {
+  .command("access-csv", "Convert all access log file in folder to CSV", {
     type: {
       alias: "t",
       describe: "Tipe ukuran file log",
@@ -119,12 +143,34 @@ const argv = yargs
       type: "string",
     },
   })
+  .command("error-csv", "Convert all error log file in folder to CSV", {
+    folder: {
+      alias: "F",
+      describe: "Folder path of all log file",
+      demandOption: true,
+      type: "string",
+      default: "./data/",
+    },
+    file: {
+      alias: "f",
+      describe: "Log file name",
+      demandOption: true,
+      type: "string",
+    },
+    count: {
+      alias: "c",
+      describe: "Number of files in folder",
+      demandOption: true,
+      type: "string",
+    },
+  })
   .help("help")
   .alias("help", "h")
   .example([
-    ["create-csv", '-t "big" --folder "./data/" --file "autosurat.access.log" -c "15"'],
-    ["create-csv", '--folder "./data/" --file "autosurat.access.log" -c "15"'],
-    // ["insert", '-F "./data/" -f "autosurat.access.log" -c "52"'],
+    ["access-csv", '-t "big" --folder "./data/" --file "autosurat.access.log" -c "15"'],
+    ["access-csv", '--folder "./data/" --file "autosurat.access.log" -c "15"'],
+    ["error-csv", '--folder "./data/" --file "autosurat.error.log" -c "15"'],
+    ["insert", '--folder "./data/" --file "autosurat.access.log" -c "15"'],
     // ["get-data", '--dateFrom "06-10-2021" --dateTo "10-10-2021"'],
     // ["get-daily", '--dateFrom "06-10-2021" --dateTo "10-10-2021"'],
     // ["get-daily-detail", '--dateFrom "06-10-2021" --dateTo "10-10-2021"'],
@@ -138,9 +184,13 @@ async function main() {
     //   createTable();
     //   break;
 
-    // case "insert":
-    //   insertLogToDatabase(argv.file, argv.folder, argv.count);
-    //   break;
+    case "insert-access":
+      insertAccessLogToDatabase(argv.file, argv.folder, argv.count);
+      break;
+  
+    case "insert-error":
+      insertErrorLogToDatabase(argv.file, argv.folder, argv.count);
+      break;
 
     // case "delete":
     //   deleteAllData();
@@ -158,12 +208,16 @@ async function main() {
     //   getDailyAccessDetailToCSV(argv.dateFrom, argv.dateTo);
     //   break;
 
-    case "create-csv":
+    case "access-csv":
       if (argv.type === 'small') {
         convertAllToCSV(argv.file, argv.folder, argv.count);
       } else {
         convertAllToCSV2(argv.file, argv.folder, argv.count);
       }
+      break;
+
+    case "error-csv":
+      convertAllErrorToCSV(argv.file, argv.folder, argv.count);
       break;
 
     // case "get-all":

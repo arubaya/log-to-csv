@@ -1,38 +1,32 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('LogData', {
+    await queryInterface.createTable('ErrorLogs', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      ip: {
-        type: Sequelize.TEXT
-      },
       tanggal: {
         type: Sequelize.DATEONLY
       },
-      waktu: {
+      error_type: {
         type: Sequelize.TEXT
       },
-      method: {
+      pid_title: {
         type: Sequelize.TEXT
       },
-      aux_method: {
+      pid: {
         type: Sequelize.TEXT
       },
-      status: {
+      ip_title: {
         type: Sequelize.TEXT
       },
-      url: {
+      ip_client: {
         type: Sequelize.TEXT
       },
-      browser: {
-        type: Sequelize.TEXT
-      },
-      os: {
+      message: {
         type: Sequelize.TEXT
       },
       createdAt: {
@@ -46,6 +40,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('LogData');
+    await queryInterface.dropTable('ErrorLogs');
   }
 };
