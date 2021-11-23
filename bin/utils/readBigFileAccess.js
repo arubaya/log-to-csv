@@ -6,7 +6,7 @@ const accessLogController = require('../controller/accessLog');
 
 // Readfile function
 // Match and split log file line by line
-function readFile(path, indexFile) {
+function readFile(path, indexFile, resumeNumber) {
   return new Promise((resolve, reject) => {
     let datas = [];
     let index = 0;
@@ -44,8 +44,9 @@ function readFile(path, indexFile) {
                 };
 
                 index++;
-                await accessLogController.storeData(data, index, indexFile);
-                
+                if (index >= resumeNumber ) {
+                  await accessLogController.storeData(data, index, indexFile);
+                }
               }
             }
 
