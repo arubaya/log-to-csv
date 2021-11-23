@@ -5,14 +5,18 @@ const prompt = ps();
 
 let totalLines = 0;
 
-async function parsingLogToCSV(file, folderName, numberOfFile) {
+async function parsingLogToCSV(file, folderName, numberOfFile, resumeNumber) {
   for (let index = 0; index < parseInt(numberOfFile); index++) {
     let lines = 0;
     const fileName = file + '.' + index;
     console.log('File: ' + fileName);
-    console.log(`Inserting Data..`);
+    if (resumeNumber === 1) {
+      console.log(`Inserting Data..`);
+    } else {
+      console.log(`Resuming Data from: ${resumeNumber}`);
+    }
     await sleep(2000);
-    lines = await readBigFileAccess(folderName + fileName, index).then((datas) => datas);
+    lines = await readBigFileAccess(folderName + fileName, index, resumeNumber).then((datas) => datas);
     totalLines = totalLines + lines;
     console.log();
     console.log('Done!');
@@ -31,7 +35,7 @@ function pad(val) {
   }
 }
 
-async function insertAccessLogToDatabase(file, folderName, numberOfFile) {
+async function insertAccessLogToDatabase(file, folderName, numberOfFile, resume) {
   console.log(
     'If there is duplicate data in the table, it will be added\ny = insert\nn = cancel\n'
   );
@@ -45,7 +49,7 @@ async function insertAccessLogToDatabase(file, folderName, numberOfFile) {
       seconds = pad(totalSeconds % 60);
       minutes = pad(parseInt(totalSeconds / 60));
     }, 1000);
-    await parsingLogToCSV(file, folderName, numberOfFile);
+    await parsingLogToCSV(file, folderName, numberOfFile, resume);
     clearInterval(interval);
     console.log();
     console.log('Done!');

@@ -27,6 +27,13 @@ const argv = yargs
   // .command("db", "Create database and create log table")
   // .command("get-all", "Get all data from database")
   .command("insert-access", "Insert access log file data to database", {
+    resume: {
+      alias: "r",
+      describe: "Memulai insert data dari index yang sudah ditentukan",
+      demandOption: true,
+      type: "string",
+      default: "1",
+    },
     type: {
       alias: "t",
       describe: "Tipe ukuran file log",
@@ -195,7 +202,7 @@ async function main() {
       if (argv.type === 'small') {
         insertAccessLogToDatabase(argv.file, argv.folder, argv.count);
       } else {
-        insertBigAccessLogToDatabase(argv.file, argv.folder, argv.count);
+        insertBigAccessLogToDatabase(argv.file, argv.folder, argv.count, parseInt(argv.resume));
       }
       break;
   
